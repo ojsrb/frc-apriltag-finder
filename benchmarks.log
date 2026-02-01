@@ -1,0 +1,25 @@
+
+Benchmarks complete for apriltags.pt on yolo_dataset/data.yaml at imgsz=640 (85.59s)
+Benchmarks legend:  - ✅ Success  - ❎ Export passed but validation failed  - ❌️ Export failed
++-----------------------------------------------------------------------------------------------------------+
+|      Format                  Status❔   Size (MB)   metrics/mAP50-95(B)   Inference time (ms/im)   FPS    |
++===========================================================================================================+
+| 1    PyTorch                 ✅         6.0         0.0                   17.69                    56.53  |
+| 2    TorchScript             ✅         11.9        0.0                   7.3                      136.96 |
+| 3    ONNX                    ❌         0.0         -                     -                        -      |
+| 4    OpenVINO                ✅         11.8        0.0                   186.26                   5.37   |
+| 5    TensorRT                ❌         0.0         -                     -                        -      |
+| 6    CoreML                  ❌         0.0         -                     -                        -      |
+| 7    TensorFlow SavedModel   ❌         0.0         -                     -                        -      |
+| 8    TensorFlow GraphDef     ❌         0.0         -                     -                        -      |
+| 9    TensorFlow Lite         ❌         0.0         -                     -                        -      |
+| 10   TensorFlow Edge TPU     ❌         0.0         -                     -                        -      |
+| 11   TensorFlow.js           ❌         0.0         -                     -                        -      |
+| 12   PaddlePaddle            ❌         0.0         -                     -                        -      |
+| 13   MNN                     ❌         0.0         -                     -                        -      |
+| 14   NCNN                    ✅         11.6        0.0                   13.96                    71.63  |
+| 15   IMX                     ❌         0.0         -                     -                        -      |
+| 16   RKNN                    ❌         0.0         -                     -                        -      |
+| 17   ExecuTorch              ❌         0.0         -                     -                        -      |
+| 18   Axelera                 ❌         0.0         -                     -                        -      |
++-----------------------------------------------------------------------------------------------------------+
