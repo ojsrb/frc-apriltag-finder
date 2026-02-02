@@ -7,8 +7,8 @@ import sys
 
 def detect(frame, show=False):
 
-    model = YOLO("find/yolo/find.pt")
-    result = model.predict(frame, conf=0.2, verbose=False)[0]
+    model = YOLO("find/apriltag_detector.pt")
+    result = model.predict(frame, conf=0.1, verbose=False)[0]
 
     annotated_frame = result.plot()
     if show:
@@ -39,7 +39,7 @@ def crop(frame, position):
     }
 
 if __name__ == "__main__":
-    model = YOLO("yolo/find.pt")
+    model = YOLO("../find.pt")
     cap = cv2.VideoCapture('../test/videos/2025wila_qm57.mp4')
 
     frame = cv2.imread('../test/pictures/2025alhu_qm43_frame0000.jpg')

@@ -123,8 +123,6 @@ def identify(results):
             if not found:
                 tags.append(Tag(id, frame_position, og, preds))
 
-            print(tags[0].avg_corners)
-
         index += 1
 
     return tags
@@ -140,12 +138,13 @@ if __name__ == '__main__':
         if not ok:
             continue
 
-        results = find.detect(frame)
+        results = find.detect(frame, True)
         tags = identify(results)
 
         if tags != []:
             corners = tags[0].avg_corners
-            if tags[0].avg_corners != []:
-                frame = cv2.drawMarker(frame, (corners[0][0].astype(int), corners[0][1].astype(int), (0,255,0), cv2.MARKER_CROSS))
+            if corners:
+                frame = cv2.drawMarker(frame, (corners[0][0].astype(int), corners[0][1].astype(int)), (0,255,0), cv2.MARKER_CROSS, 50)
+                cv2.imwrite(f'output/{tags[0].id}.jpg', tags[0].hr_img)
 
         cv2.imshow('video', frame)
