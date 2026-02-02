@@ -3,6 +3,7 @@ Uses a match video to estimate the pose of the camera to be used for frc1710's c
 
 ## Current state
 Currently only identifies apriltags found, will display their positions on video feed and output their positions.
+It is also common that it simply does not find any tags, but I assure you it is running properly.
 
 ## Usage
 1. Clone the repo
