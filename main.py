@@ -147,4 +147,4 @@ if __name__ == '__main__':
                 frame = cv2.drawMarker(frame, (corners[0][0].astype(int), corners[0][1].astype(int)), (0,255,0), cv2.MARKER_CROSS, 50)
                 cv2.imwrite(f'output/{tags[0].id}.jpg', tags[0].hr_img)
 
-        cv2.imshow('video', frame)
+        # cv2.imshow('video', frame)
