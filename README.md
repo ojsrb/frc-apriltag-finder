@@ -12,8 +12,7 @@ It is also common that it simply does not find any tags, but I assure you it is 
 2. `uv sync` to install dependencies
 
 
-3. `uv run main.py [path/to/video.mp4]` to execute the script on a video. 
-`test.mp4` is provided to try it out.\
+3. `uv run main.py test.mp4` to execute the script on a video.  
 This will take a minute to start up, as this is a large project.
 
 
