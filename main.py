@@ -1,12 +1,8 @@
 import find
-import identify
 import cv2
-import PIL
-from PIL import Image
-import torch
-import numpy as np
 import json
 import custom_upscale
+import sys
 
 class Tag:
     def __init__(self, id, img_pos, lr_img, hr_img):
@@ -134,7 +130,7 @@ def identify(results):
     return tags
 
 if __name__ == '__main__':
-    video = cv2.VideoCapture('test/videos/camera_03.mp4')
+    video = cv2.VideoCapture(sys.argv[1])
     while True:
         ok, frame = video.read()
 
