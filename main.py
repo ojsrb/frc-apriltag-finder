@@ -29,7 +29,6 @@ class Tag:
         bl = []
 
         for i in self.corner_hist:
-            print(i)
             tl.append(i[0])
             tr.append(i[1])
             br.append(i[2])
@@ -142,6 +141,7 @@ if __name__ == '__main__':
         tags = identify(results)
 
         if tags != []:
+            print(f'Found {len(tags)} tags')
             corners = tags[0].avg_corners
             if corners:
                 frame = cv2.drawMarker(frame, (corners[0][0].astype(int), corners[0][1].astype(int)), (0,255,0), cv2.MARKER_CROSS, 50)
