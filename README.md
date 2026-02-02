@@ -7,4 +7,9 @@ Currently only identifies apriltags found, will display their positions on video
 ## Usage
 1. Clone the repo
 2. `uv sync` to install dependencies
-3. `uv run main.py [path/to/video.mp4]` to execute the script on a video
+3. `uv run main.py [path/to/video.mp4]` to execute the script on a video, will analyze by frame
+
+## Future features
+- Average tag positions to get more accurate locations (WIP)
+- Estimate camera specifications (focal dist, distortion)
+- Estimate pose of camera
