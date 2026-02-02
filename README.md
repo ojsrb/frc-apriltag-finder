@@ -8,7 +8,9 @@ It is also common that it simply does not find any tags, but I assure you it is 
 ## Usage
 1. Clone the repo
 
+
 2. `uv sync` to install dependencies
+
 
 3. `uv run main.py [path/to/video.mp4]` to execute the script on a video. 
 `test.mp4` is provided to try it out.\
