@@ -1,5 +1,5 @@
 # FRC Match video apriltag localizer
-Uses a match video to estimate the pose of the camera to be used for frc1710's computer vision autoscouting system.
+Uses a match video to estimate the pose of the camera to be used to automatically track robot actions and positions.
 
 ## Current state
 Currently only identifies apriltags found, will display their positions on video feed and output their positions.
