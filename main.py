@@ -9,7 +9,6 @@ import sys
 
 device = 'cpu'
 
-
 class Tag:
     def __init__(self, id, img_pos, lr_img, hr_img):
         self.img_pos = img_pos
@@ -146,7 +145,6 @@ def identify(results, save=False):
             center = corners2center(tag_corners)
             frame_position = cropped2global(center, pos, 4)
 
-
             found = False
             tag = None
             for i in tags:
@@ -206,4 +204,4 @@ if __name__ == '__main__':
                         corner = cropped2global(tag.img_pos, i, 4)
                         cv2.drawMarker(frame, i, (255,0,0), cv2.MARKER_CROSS, 30, 4)
 
-        cv2.imshow('video', frame)
+        cv2.imshow('video', annotated_frame)
