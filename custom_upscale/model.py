@@ -1,23 +1,34 @@
 import math
-
 import torch
-import torch.nn as nn
+import torch
+from torch import nn
 
 class ESPCN(nn.Module):
-    def __init__(self, in_channels, channels, scale_factor):
+    def __init__(self, in_channels, config, scale_factor):
         super(ESPCN, self).__init__()
+        channels = config.channels
         hidden_channels = channels // 2
         out_channels = int(in_channels * (scale_factor ** 2))
 
-        self.feature_maps = nn.Sequential(
+        act = nn.PReLU()
+
+        layers = [
             nn.Conv2d(in_channels, channels, (5,5), (1,1), (2,2)),
-            nn.Tanh(),
+            act,
             nn.Conv2d(channels, hidden_channels, (3,3), (1,1), (1,1)),
-            nn.Tanh(),
-        )
+            act,
+        ]
+        for i in range(config.layers - 3):
+            layers.append(nn.Conv2d(hidden_channels, hidden_channels, (3,3), (1,1), (1,1)))
+            layers.append(act)
+
+        layers.append(nn.Conv2d(hidden_channels, channels, (3,3), (1,1), (1,1)))
+        layers.append(act)
+
+        self.feature_maps = nn.Sequential(*layers)
 
         self.sub_pixel = nn.Sequential(
-            nn.Conv2d(hidden_channels, out_channels, (3,3), (1,1), (1,1)),
+            nn.Conv2d(channels, out_channels, (3,3), (1,1), (1,1)),
             nn.PixelShuffle(scale_factor),
         )
 

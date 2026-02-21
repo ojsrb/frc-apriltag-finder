@@ -5,21 +5,19 @@ import cv2
 import sys
 
 
-def detect(frame, show=False):
+def detect(frame):
 
     model = YOLO("find/apriltag_detector.pt")
     result = model.predict(frame, conf=0.1, verbose=False)[0]
 
     annotated_frame = result.plot()
-    if show:
-        cv2.imshow("frame", annotated_frame)
     outputs = []
 
     for box in result.boxes:
         position = box.xyxy
         outputs.append(crop(frame, position))
 
-    return outputs
+    return annotated_frame, outputs
 
 def crop(frame, position):
     position = position.cpu().numpy().astype(int)

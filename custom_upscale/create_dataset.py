@@ -1,10 +1,8 @@
+
 import cv2
 import numpy as np
 import os
 import random
-
-hr_dir = 'dataset/high_res'
-lr_dir = 'dataset/low_res'
 
 dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_APRILTAG_36h11)
 
@@ -59,10 +57,18 @@ def compress(image):
 ids = 33
 variations = 100
 
+valid_variations = round(variations * 0.2)
+
 for i in range(ids):
     for j in range(variations):
         tag = generate(i)
         compressed = compress(tag)
-        filename = f'{i}_{j}.png'
-        cv2.imwrite(os.path.join(hr_dir, filename), tag)
-        cv2.imwrite(os.path.join(lr_dir, filename), compressed)
+        cv2.imwrite(f'dataset/train/high_res/{i}_{j}.png', tag)
+        cv2.imwrite(f'dataset/train/low_res/{i}_{j}.png', compressed)
+
+for i in range(ids):
+    for j in range(valid_variations):
+        tag = generate(i)
+        compressed = compress(tag)
+        cv2.imwrite(f'dataset/valid/high_res/{i}_{j}.png', tag)
+        cv2.imwrite(f'dataset/valid/low_res/{i}_{j}.png', compressed)
