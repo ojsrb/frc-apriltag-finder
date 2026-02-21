@@ -101,7 +101,7 @@ def identify(results, save=False):
     for index, result in enumerate(results):
         pos = result["position"]
 
-        min_dist = 200
+        min_dist = 10
 
         x = pos[0]
         y = pos[1]
@@ -194,16 +194,16 @@ if __name__ == '__main__':
         tags, detections = identify(results, True)
 
         for i in detections:
-            cv2.drawMarker(frame, i, (0,255,0), cv2.MARKER_CROSS, 100, 10)
+            cv2.drawMarker(frame, i, (0,255,0), cv2.MARKER_CROSS, 30, 4)
 
         if tags != []:
             for index, tag in enumerate(tags):
                 cv2.imwrite(f'output/{tag.id}.jpg', tag.hr_img)
-                if tag.avg_corners is not None:
+                if tag.avg_corners != []:
                     corners = globalize_corners(tag.avg_corners, tag.img_pos, 4)
                     center = cropped2global(tag.img_pos, tag.avg_center, 4)
                     for i in corners:
                         corner = cropped2global(tag.img_pos, i, 4)
-                        cv2.drawMarker(frame, i, (0,255,0), cv2.MARKER_CROSS, 50)
+                        cv2.drawMarker(frame, i, (255,0,0), cv2.MARKER_CROSS, 30, 4)
 
         cv2.imshow('video', frame)
