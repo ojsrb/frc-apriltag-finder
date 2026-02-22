@@ -108,24 +108,27 @@ def identify(results, save=False):
 
     return tags
 
+def main(frame):
+    annotated_frame, results = find.detect(frame)
+    tags = identify(results, True)
+
+    if tags != []:
+        # iterate over all tags
+        for tag in tags.values():
+            cv2.imwrite(f'output/{tag.id}.jpg', tag.hr_img)
+            cv2.drawMarker(frame, tag.center, (0,255,0), cv2.MARKER_CROSS, 15, 2)
+
+    cv2.imshow('video', frame)
+
 if __name__ == '__main__':
-    video = cv2.VideoCapture(sys.argv[1])
-    while True:
-        ok, frame = video.read()
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-        if not ok:
-            continue
-
-        annotated_frame, results = find.detect(frame)
-        tags = identify(results, True)
-
-        if tags != []:
-            # iterate over all tags
-            for tag in tags.values():
-                cv2.imwrite(f'output/{tag.id}.jpg', tag.hr_img)
-                cv2.drawMarker(frame, tag.center, (0,255,0), cv2.MARKER_CROSS, 15, 2)
-
-        cv2.imshow('video', frame)
+    if sys.argv[1].endswith(".mp4"):
+        cap = cv2.VideoCapture(sys.argv[1])
+        while True:
+            ret, frame = cap.read()
+            main(frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    elif sys.argv[1].endswith(".jpg") or sys.argv[1].endswith(".jpeg") or sys.argv[1].endswith(".png"):
+        img = cv2.imread(sys.argv[1])
+        main(img)
+        cv2.waitKey(0)
