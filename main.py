@@ -109,6 +109,7 @@ def identify(results, save=False):
     return tags
 
 if __name__ == '__main__':
+    video = cv2.VideoCapture(sys.argv[1])
     while True:
         ok, frame = video.read()
 
