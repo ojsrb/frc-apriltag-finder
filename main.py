@@ -16,8 +16,8 @@ class Tag:
         self.lr_img = lr_img
         self.hr_img = hr_img
         self.corner_hist = []
-        self.avg_corners = []
-        self.avg_center = (0,0)
+        self.corners = []
+        self.center = ()
 
         file = open("tags.json")
         tag_data = json.load(file)["tags"]
@@ -28,30 +28,14 @@ class Tag:
                 self.field_pos = (round(tag_pos['x'], 4), round(tag_pos['y'], 4), round(tag_pos['z'], 4))
                 break
 
-    def calc_average_corners(self):
-        tl = []
-        tr = []
-        br = []
-        bl = []
+    def add_corners(self, corners):
+        # no clue why this need to be 16 (prob math or smth)
+        # but here we are
+        global_corners = globalize_corners(corners, self.img_pos, 4)
+        self.corners = global_corners
+        self.center = corners2center(global_corners)
 
-        for i in self.corner_hist:
-            tl.append(i[0])
-            tr.append(i[1])
-            br.append(i[2])
-            bl.append(i[3])
-
-        average_corners = [
-            average_positions(tl),
-            average_positions(tr),
-            average_positions(br),
-            average_positions(bl)
-        ]
-
-        self.avg_corners = average_corners
-        self.avg_center = corners2center(average_corners)
-        return average_corners
-
-tags = []
+tags = {}
 
 def average_positions(list):
     x_list = []
@@ -66,8 +50,8 @@ def average_positions(list):
     return (x_avg, y_avg)
 
 def cropped2global(cropped_img_pos, pos, scale):
-    x = (pos[0] // scale + cropped_img_pos[0])
-    y = (pos[1] // scale + cropped_img_pos[1])
+    x = (pos[0] // (scale ** 2)) + cropped_img_pos[0]
+    y = (pos[1] // (scale ** 2)) + cropped_img_pos[1]
     return (int(x), int(y))
 
 def globalize_corners(corners, img_pos, scale):
@@ -94,33 +78,8 @@ def identify(results, save=False):
     parameters = cv2.aruco.DetectorParameters()
     detector = cv2.aruco.ArucoDetector(aruco_dict, parameters)
 
-    index = 0
-    result_positions = [(0,0)]
-
     for index, result in enumerate(results):
         pos = result["position"]
-
-        min_dist = 10
-
-        x = pos[0]
-        y = pos[1]
-        tooClose = False
-        for i in result_positions:
-            tag_x = i[0]
-            tag_y = i[1]
-
-            x_dist = abs(tag_x - x)
-            y_dist = abs(tag_y - y)
-            print(x_dist, y_dist)
-
-            if x_dist < min_dist or y_dist < min_dist:
-                tooClose = True
-
-        if tooClose:
-            print("too close")
-            continue
-        else:
-            result_positions.append((int(x),int(y)))
 
         og = result["image"]
 
@@ -134,50 +93,25 @@ def identify(results, save=False):
         (corners_list, marker_ids, rejected) = detector.detectMarkers(preds)
         preds = cv2.cvtColor(preds, cv2.COLOR_GRAY2BGR)
         cv2.aruco.drawDetectedMarkers(preds, corners_list, marker_ids, (0,255,0))
-        # if corners_list != []:
-        #     corners = corners_list[0]
-        #     for i in corners:
-        #         cv2.drawMarker(preds, i, (0,255,0), cv2.MARKER_CROSS)
         if marker_ids is not None:
+            id = int(marker_ids[0][0])
             tag_corners = corners_list[0][0]
-            id = marker_ids[0]
 
             center = corners2center(tag_corners)
-            frame_position = cropped2global(center, pos, 4)
 
-            found = False
-            tag = None
-            for i in tags:
-                if i.id == id:
-                    tag = i
-                    i.corner_hist.append(tag_corners)
-                    i.calc_average_corners()
-                    i.corners = tag_corners
-                    found = True
-
-                    break
-
-            if not found:
-                tags.append(Tag(id, frame_position, og, preds))
-                tag = tags[-1]
-
-            if save and tag.avg_corners is not None:
-                frame = tag.hr_img
-                center = tag.avg_center
-                frame = cv2.drawContours(frame, np.array([tag.avg_corners]), -1, (0, 255, 0), 2)
-
-                for i in tag.avg_corners:
-                    cv2.drawMarker(preds, i, (0,255,0), cv2.MARKER_CROSS, 50, 1)
-
-                for i in tag.corner_hist:
-                    cv2.drawMarker(preds, (int(i[0][0]), int(i[0][1])), (0,255,0), cv2.MARKER_CROSS, 50, 10)
-
-                cv2.imshow(f'output/{tag.id}.jpg', preds)
+            try:
+                tags[id].add_corners(tag_corners)
+            except KeyError:
+                tags[id] = Tag(id, pos, lr_img=og, hr_img=preds)
+                tags[id].add_corners(tag_corners)
 
 
-    return tags, result_positions
+    return tags
+
+def main(frame)
 
 if __name__ == '__main__':
+    if sys.argv[1].endswith('.mp4'):
     video = cv2.VideoCapture(sys.argv[1])
     while True:
         ok, frame = video.read()
@@ -189,19 +123,12 @@ if __name__ == '__main__':
             continue
 
         annotated_frame, results = find.detect(frame)
-        tags, detections = identify(results, True)
-
-        for i in detections:
-            cv2.drawMarker(frame, i, (0,255,0), cv2.MARKER_CROSS, 30, 4)
+        tags = identify(results, True)
 
         if tags != []:
-            for index, tag in enumerate(tags):
+            # iterate over all tags
+            for tag in tags.values():
                 cv2.imwrite(f'output/{tag.id}.jpg', tag.hr_img)
-                if tag.avg_corners != []:
-                    corners = globalize_corners(tag.avg_corners, tag.img_pos, 4)
-                    center = cropped2global(tag.img_pos, tag.avg_center, 4)
-                    for i in corners:
-                        corner = cropped2global(tag.img_pos, i, 4)
-                        cv2.drawMarker(frame, i, (255,0,0), cv2.MARKER_CROSS, 30, 4)
+                cv2.drawMarker(frame, tag.center, (0,255,0), cv2.MARKER_CROSS, 15, 2)
 
-        cv2.imshow('video', annotated_frame)
+        cv2.imshow('video', frame)

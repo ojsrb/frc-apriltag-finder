@@ -1,0 +1,12 @@
+{
+  "method": "bayes",
+  "metric": {"goal": "maximize", "name": "precision"},
+  "parameters": {
+    "lr0": {"max":  1e-2, "min": 1e-4},
+    "lrf": {"max":  0.2, "min":  0.01},
+    "momentum": {"max":  0.98, "min":  0.8},
+    "weight_decay": {"max":  1e-3, "min":  1e-4},
+    "warmup_epochs": {"max":  5, "min":  0},
+    "warmup_momentum": {"max":  0.95, "min":  0.5}
+  }
+}
