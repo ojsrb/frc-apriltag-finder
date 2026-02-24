@@ -1,0 +1,1 @@
+{"lr": 0.0007512623411746368, "beta1": 0.9, "beta2": 0.999, "epochs": 6, "layers": 6, "lr_step": 25, "channels": 97, "lr_gamma": 0.463759063609263, "batch_size": 38, "quad_sigma": 0.13443443827502258, "max_nmaxima": 30, "weight_decay": 0.0001704059188600567, "quad_decimate": 1.1776420860217007, "min_cluster_pixels": 6, "min_white_black_diff": 29}
