@@ -183,7 +183,7 @@ def save_best():
 
     print("starting training")
 
-    _, _, model = train_model(best_run, "mps", True)
+    _, _, model = train_model(best_run, "cpu", True)
 
     image = cv2.imread(sys.argv[2])
     scale = 4
@@ -197,7 +197,7 @@ def save_best():
 
     to_tensor = transforms.ToTensor()
     img_tensor = to_tensor(img_bicubic)
-    img_tensor = img_tensor.to('mps')
+    img_tensor = img_tensor.to('cpu')
 
     with torch.no_grad():
         sr_tensor = model(img_tensor)
