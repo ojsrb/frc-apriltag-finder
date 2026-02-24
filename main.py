@@ -116,7 +116,8 @@ def main(frame):
         # iterate over all tags
         for tag in tags.values():
             cv2.imwrite(f'output/{tag.id}.jpg', tag.hr_img)
-            cv2.drawMarker(frame, tag.center, (0,255,0), cv2.MARKER_CROSS, 15, 2)
+            for corner in tag.corners:
+                cv2.drawMarker(frame, corner, (0,255,0), cv2.MARKER_CROSS, 15, 2)
 
     cv2.imshow('video', frame)
 
