@@ -1,6 +1,11 @@
 # FRC Match video apriltag localizer
 Uses a match video to estimate the pose of the camera to be used to automatically track robot actions and positions.
 
+The cycle is as follows for finding and identifying tags:
+1. YOLOv8 model detects **where** apriltags are on the field (the qr code thingys)
+2. Those detections are cropped and upscaled with a custom pytorch model (AI/ML)
+3. Finally, it uses opencv's apriltag detection to read data from each tag and match it to its real life location.
+
 ## Current state
 Currently only identifies apriltags found, will display their positions on video feed and output their positions.
 It is also common that it simply does not find any tags, but I assure you it is running properly.
